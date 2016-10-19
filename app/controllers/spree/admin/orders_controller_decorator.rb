@@ -1,7 +1,10 @@
+require 'combine_pdf'
+
 module Spree
   module Admin
     OrdersController.class_eval do
       respond_to :pdf, only: :show
+
 
       def show
         load_order
@@ -15,6 +18,19 @@ module Spree
           end
         end
       end
+
+      # ex: /admin/orders/batch_print?order_ids=R228557273,R546636746&template=packaging_slip
+      def show_multi
+        pdf = CombinePDF.new
+        params[:order_ids].split(',').each do |oid|
+          @order = Spree::Order.friendly.find(oid)
+          next unless @order
+          @order.update_invoice_number!
+          pdf << CombinePDF.parse(@order.pdf_file(pdf_template_name))
+        end
+        send_data pdf.to_pdf, type: 'application/pdf', disposition: 'inline'
+      end
+
 
       private
 

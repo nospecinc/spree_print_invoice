@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.requirements << 'none'
 
+  s.add_runtime_dependency 'combine_pdf'
   s.add_runtime_dependency 'prawn', '~> 1.0.0'
   s.add_runtime_dependency 'spree_core', '~> 3.0.0'
 
